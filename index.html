@@ -19,22 +19,22 @@
 </svg>
       </button>
     </div>
-      <main v-enter="'duration-100'" v-enter-from="'opacity-0 scale-95'" v-enter-to="'opacity-100 scale-100'" v-leave="'duration-75'" v-leave-from="'opacity-100 scale-100'" v-leave-to="'opacity-0 scale-95'" v-visible="open">
+      <main v-state:enter="'duration-100'" v-state:enter-from="'opacity-0 scale-95'" v-state:enter-to="'opacity-100 scale-100'" v-state:leave="'duration-75'" v-state:leave-from="'opacity-100 scale-100'" v-state:leave-to="'opacity-0 scale-95'" v-state:show="open" >
         <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
         <div class="py-1" role="none">
-          <a href="#" class="block px-4 py-2 text-sm text-gray-700" @click="open = false;">Edit</a>
-          <a href="#" class="block px-4 py-2 text-sm text-gray-700" @click="open = false;">Duplicate</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:text-blueGray-900 transition-colors" @click="open = false;">Edit</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:text-blueGray-900 transition-colors" @click="open = false;">Duplicate</a>
         </div>
         <div class="py-1" role="none">
-          <a href="#" class="text-gray-700 block px-4 py-2 text-sm" @click="open = false;">Move</a>
-          <a href="#" class="text-gray-700 block px-4 py-2 text-sm" @click="open = false;">Archive</a>
+          <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:text-blueGray-900 transition-colors" @click="open = false;">Move</a>
+          <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:text-blueGray-900 transition-colors" @click="open = false;">Archive</a>
         </div>
         <div class="py-1" role="none">
-          <a href="#" class="text-gray-700 block px-4 py-2 text-sm" @click="open = false;">Share</a>
-          <a href="#" class="text-gray-700 block px-4 py-2 text-sm" @click="open = false;">Add to favorites</a>          
+          <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:text-blueGray-900 transition-colors" @click="open = false;">Share</a>
+          <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:text-blueGray-900 transition-colors" @click="open = false;">Add to favorites</a>          
         </div>
         <div class="py-1" role="none">
-          <a href="#" class="text-gray-700 block px-4 py-2 text-sm" @click="open = false; focusButton()">Delete</a>
+          <a href="#" class="text-gray-700 block px-4 py-2 text-sm hover:text-blueGray-900 transition-colors hover:text-blueGray-900 transition-colors" @click="open = false;">Delete</a>
         </div>
       </div>
       </main>

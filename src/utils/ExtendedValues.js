@@ -8,6 +8,7 @@ const ValuesArray = [
 	['l','left'],
 	['t','top'],
 ];
+export const shortProp=['h','bg','p','m','t','r','l','t'];
 const extended = new Map(ValuesArray);
 // to convert pt to padding-top
 export const extValues = (propsStr,joiningValue) => {

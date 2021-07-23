@@ -1,5 +1,5 @@
 import { colors } from '../utils/colors.js'
-import { extValues } from '../utils/ExtendedValues.js'
+import { extValues, shortProp } from '../utils/ExtendedValues.js'
 function psr(obj,transformObj,property,value) {
 	let prefix = ''
 	switch(property){
@@ -43,9 +43,12 @@ function isXOrY(value){
 	}
 }
 
+function splitClasses(classes) {
+  return classes.split(' ').filter(className => className.trim().length > 1)
+}
+
 function cvt(str,el)  {
-	console.log(str)
-    const propsArray = str.trim().split(' ')
+    const propsArray = splitClasses(str)
     const tempObj = {}
     tempObj['transform'] = []
     let directions = extValues('tr',' ')
@@ -63,8 +66,8 @@ function cvt(str,el)  {
         if(transformProperties.includes(property)){
         	tempObj.transform = psr(a,tempObj.transform,property,value)
         }else{
-        	switch(property){
-        		case 'bg':
+        	switch(true){
+        		case property==='bg':
         			// bg-transition and bg-[#555] are not type of colorName 
         			let AfterBg = a.split('-')[1]
         			if(AfterBg==='gradient'){
@@ -85,57 +88,46 @@ function cvt(str,el)  {
         						tempObj['backgroundColor'] = 'black'
         						break;
         					default:
-        						let colorName = a.split('-')[1]
-        						let colorShade = a.split('-')[2]
-        						tempObj['backgroundColor'] = `${colors[colorName][colorShade]}`
+        						let colorName = a.split('-')[1] // blue
+        						let colorShade = a.split('-')[2] // 200
+        						let [hueValue,saturationValue] = colors[colorName].value
+        						tempObj['backgroundColor'] = `hsl(${hueValue},${saturationValue},${(1000-colorViaShade)/10}%})`
         						break;
         				}
         			}
         			break;
-        		case 'from':
-        			let colorFrom = a.split('-')[1]
+        		case property==='from':
+        			let colorFromName = a.split('-')[1]
         			let colorFromShade = a.split('-')[2]
-        			fromValue = `${colors[colorFrom][colorFromShade]}`
+        			let [hueValue,saturationValue] = colors[colorFromName].value
+        			fromValue = `hsl(${hueValue},${saturationValue},${(1000-colorViaShade)/10}%})`
         			tempObj['backgroundImage'] = `linear-gradient(to ${directions},${fromValue}, #FFF)`
         			// el.style.setProperty('--tw-gradient-from',`${colors[colorFrom][colorFromShade]}`)
         			// console.log(`${colorFrom}`,`${colorFromShade}`)
         			// el.style.setProperty('--tw-gradient-stops',`var(--tw-gradient-from), var(--tw-gradient-to, rgba(0, 0, 0, 0))`)
         			break;
-        		case 'via':
-        			let colorVia = a.split('-')[1] ?? 'gray'
-        			let colorViaShade = a.split('-')[2] ?? '100'	
-        			viaValue = `${colors[colorVia][colorViaShade]}`
+        		case property==='via':
+        			let colorViaName = a.split('-')[1] ?? 'gray'
+        			let colorViaShade = a.split('-')[2] ?? '100'
+        			let [viaHueValue,viaSaturationValue] = colors[colorViaName].value
+        			viaValue = `hsl(${viaHueValue},${viaSaturationValue},${(1000-colorViaShade)/10}%})`
  					// let fromValue = variableValue('--tw-gradient-from',el)
         			tempObj['backgroundImage'] = `linear-gradient(to ${directions},${fromValue},${viaValue}, #FFF)`
         			// el.style.setProperty('--tw-gradient-via',`${colors[colorTo][colorToShade]}`)
         			break;
-        		case 'to':
-        			let colorTo = a.split('-')[1] ?? 'gray'
+        		case property==='to':
+        			let colorToName = a.split('-')[1] ?? 'gray'
         			let colorToShade = a.split('-')[2] ?? '100'	
-        			// let viaValue =  variableValue('--tw-gradient-via',el) ?? 0 
+        			let [toHueValue,toSaturationValue] = colors[colorToName].value
+        			toValue = `hsl(${toHueValue},${toSaturationValue},${(1000-colorToShade)/10}%})`
         			if(viaValue){
-        				tempObj['backgroundImage'] = `linear-gradient(to ${directions},${fromValue},${viaValue},${colors[colorTo][colorToShade]})`
+        				tempObj['backgroundImage'] = `linear-gradient(to ${directions},${fromValue},${viaValue},${toValue})`
         			}else{
-        				tempObj['backgroundImage'] = `linear-gradient(to ${directions},${fromValue},${colors[colorTo][colorToShade]})`
+        				tempObj['backgroundImage'] = `linear-gradient(to ${directions},${fromValue},${toValue})`
         			}
         			// el.style.setProperty('--tw-gradient-to',`${colors[colorTo][colorToShade]}`)
         			break;
-        		case 'h':
-        			tempObj[extValues(property,'-')] = `${value*4}px`
-        			break;
-        		case 'p':
-        			tempObj[extValues(property,'-')] = `${value*4}px`
-        			break;
-        		case 'pt':
-        			tempObj[extValues(property,'-')] = `${value*4}px`
-        			break;
-        		case 'pr':
-        			tempObj[extValues(property,'-')] = `${value*4}px`
-        			break;
-        		case 'pb':
-        			tempObj[extValues(property,'-')] = `${value*4}px`
-        			break;
-        		case 'pl':
+        		case shortProp.includes(property):
         			tempObj[extValues(property,'-')] = `${value*4}px`
         			break;
            		default:
@@ -162,70 +154,50 @@ function playState(element,foreverProp,startProp,endProp,state){
 		if(state==='enter'){
 			setTimeout(()=>{
     			anim.commitStyles()
-  			},foreverProp.duration-1)	
+  			},foreverProp.duration-1)
 		}
 }
 
-export const visible = (ctx) => {
-	let enter = cvt(ctx.el.getAttribute('enter'),ctx.el)
-	let enterFrom = cvt(ctx.el.getAttribute('enter-from'),ctx.el)
-	let enterTo = cvt(ctx.el.getAttribute('enter-to'),ctx.el)
-	let leave = cvt(ctx.el.getAttribute('leave'),ctx.el)
-	let leaveFrom = cvt(ctx.el.getAttribute('leave-from'),ctx.el)
-	let leaveTo = cvt(ctx.el.getAttribute('leave-to'),ctx.el)
-	let child = ctx.el.firstElementChild
-	console.log(ctx.el)
-	console.log(enterTo)
-	ctx.effect(() => {
-		ctx.el.setAttribute('show', ctx.get() )
-		if(ctx.get()){
-			ctx.el.append(child)
-			playState(child,enter,enterFrom,enterTo,'enter')
-			// console.log(`${colors.blue['500']}`)
-		} else{
-			playState(child,leave,leaveFrom,leaveTo,'leave')
-			setTimeout(()=>{
-     			child.remove()
-  	 		},leave.duration)
+export const state = ({el,get,effect,exp,arg,modifiers}) => {
+	let child = el.firstElementChild
+	switch(arg){
+		case 'show':
+			el.setAttribute(arg,get())
+			break;
+		case 'enter':
+			el.setAttribute(arg,get())
+			break;
+		case 'enter-from':
+			el.setAttribute(arg,get())
+			break;
+		case 'enter-to':
+			el.setAttribute(arg,get())
+			break;
+		case 'leave':
+			el.setAttribute(arg,get())
+			break;
+		case 'leave-from':
+			el.setAttribute(arg,get())
+			break;
+		case 'leave-to':
+			el.setAttribute(arg,get())
+			break;
+	}
+	effect(() => {
+		if(arg==='show' && el.getAttribute('enter')&& el.getAttribute('enter-from')&& el.getAttribute('enter-to')&& el.getAttribute('leave')&& el.getAttribute('leave-from')&& el.getAttribute('leave-to')){
+			el.removeAttribute(arg);
+			el.setAttribute(arg,get());
+			if(eval(el.getAttribute('show'))){
+				el.append(child)
+				playState(child,cvt(el.getAttribute('enter'),el),cvt(el.getAttribute('enter-from'),el),cvt(el.getAttribute('enter-to'),el),'enter')
+			} else {
+				playState(child,cvt(el.getAttribute('leave'),el),cvt(el.getAttribute('leave-from'),el),cvt(el.getAttribute('leave-to'),el),'leave')
+				setTimeout(()=>{
+     				child.remove()
+  	 			},cvt(el.getAttribute('leave'),el).duration)
+			}
+
 		}
-    	// console.log('El()Element: \n',ctx.el,' \n Argument \n',ctx.arg,'\n Modifiers \n',ctx.modifiers,'\n Get \n',ctx.get())
+    	// console.log('El()Element: \n',el,' \n Argument \n',arg,'\n Modifiers \n',modifiers,'\n Get \n',get())
   })
-}
-
-export const enterFrom = (ctx) => {
-	ctx.el.setAttribute('enter-from', ctx.get() )
-}
-
-export const enterTo = (ctx) => {
-	ctx.el.setAttribute('enter-to', ctx.get() )
-}
-
-// Convert String to Objects Like { property:value }
-export const enter = (ctx) => {
-	ctx.el.setAttribute('enter', ctx.get() )
-}
-
-export const duration = (ctx) => {
-	
-}
-
-export const delay = (ctx) => {
-	
-}
-
-export const easeing = (ctx) => {
-	
-}
-
-
-export const leave = (ctx) => {
-	ctx.el.setAttribute('leave', ctx.get() )
-}
-
-export const leaveFrom = (ctx) => {
-	ctx.el.setAttribute('leave-from', ctx.get() )
-}
-
-export const leaveTo = (ctx) => {
-	ctx.el.setAttribute('leave-to', ctx.get() )
 }
