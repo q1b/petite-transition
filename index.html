@@ -6,80 +6,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
   </head>
-  <style>
-  .bg-blue-500{
-    background: hsl(210,100%,50%);
-  }
-  .bg-rose-500{
-    background: hsl(345,100%,50%);
-  }
-  .px-4{
-    padding-right:6px;
-    padding-left:6px;
-  }
-  .py-2{
-    padding-top:2px;
-    padding-bottom:2px;
-  }
-  .transition-bg{
-    transition-property: background,color;
-  }
-  .duration-1000{
-    transition-duration: 1000ms;
-  }
-  .ease-in{
-    transition-timing-function: ease-in;
-  }
-  .text-white{
-    color: white;
-  }
-  </style>
   <body>
-    <div id="app">
+    <div class="" style="">
+  <div class="p-8 bg-gray-100" style="min-height: 460px;">
+    <div class="mx-auto w-64 text-right">
+  <div v-scope="{ open:true }" class="relative inline-block text-left">
+    <div>
+      <button @click="open = !open" type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-indigo-500" id="menu-button">
+        Options
+        <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+</svg>
+      </button>
     </div>
-  <section v-scope="{ show:true }">
+      <main v-enter="'duration-100'" v-enter-from="'opacity-0 scale-95'" v-enter-to="'opacity-100 scale-100'" v-leave="'duration-75'" v-leave-from="'opacity-100 scale-100'" v-leave-to="'opacity-0 scale-95'" v-visible="open">
+        <div class="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 divide-y divide-gray-100 focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabindex="-1">
+        <div class="py-1" role="none">
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700" @click="open = false;">Edit</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700" @click="open = false;">Duplicate</a>
+        </div>
+        <div class="py-1" role="none">
+          <a href="#" class="text-gray-700 block px-4 py-2 text-sm" @click="open = false;">Move</a>
+          <a href="#" class="text-gray-700 block px-4 py-2 text-sm" @click="open = false;">Archive</a>
+        </div>
+        <div class="py-1" role="none">
+          <a href="#" class="text-gray-700 block px-4 py-2 text-sm" @click="open = false;">Share</a>
+          <a href="#" class="text-gray-700 block px-4 py-2 text-sm" @click="open = false;">Add to favorites</a>          
+        </div>
+        <div class="py-1" role="none">
+          <a href="#" class="text-gray-700 block px-4 py-2 text-sm" @click="open = false; focusButton()">Delete</a>
+        </div>
+      </div>
+      </main>
+  </div>
+    </div>
+  </div>
+</div>
+  
+  <!-- <section v-scope="{ show:true }">
     <button @click="show=!show" >Toggle Show</button>
     <main
           v-enter="'duration-1000'" 
-          v-enter-from="'opacity-0 color-#FFFFFF bg-gradient-to-r from-blue-300 via-gray-50 to-gray-900'"
-          v-enter-to="'opacity-100 color-#322 bg-gradient-to-r from-blue-300 via-gray-50 to-gray-100'"
+          v-enter-from="'opacity-0'"
+          v-enter-to="'opacity-100'"
           v-leave="'duration-1000'"
-          v-leave-from="'opacity-100 color-#FF0045 scale-100 rotate-0 translate-90-80-90'"
-          v-leave-to="'opacity-0 color-#445328 scale-0 rotate-90 translate-0-10-90'"
+          v-leave-from="'opacity-100 scale-100 rotate-0 translate-90-80-90'"
+          v-leave-to="'opacity-0 scale-0 rotate-90 translate-0-10-90'"
           v-visible="show"
           >
-          <div>asdasd</div>
+          <div class="text-white w-max bg-black">asdasd</div>
     </main>
   </section>
-
-    <section>
-    <button v-on-enter="{
-      id:'item',
-      keyframes:[
-        { transform: 'translateX(0px)' },
-        { transform: 'translateX(-300px)' }
-      ],options:{
-        duration:1000,
-      }}" class="bg-blue-500 ">
-      Click Enter
-    </button>
-    <button v-on-leave="{
-      id:'item',
-      keyframes:[
-        { transform: 'translateX(-300px)' },
-        { transform: 'translateX(0px)' }
-      ],options:{
-        duration:1000,
-      }}">
-      Click Away
-    </button>
-    <div id="item" class="">
-      loremadsasdasdasdasdasdadasdasdasdasdasdadasd
-    </div>
-  </section>
-    <button v-c-transition="{cls:'transition-bg ease-in px-4 py-2 duration-1000',from:'bg-blue-500 text-white',to:'bg-rose-500'}">
-      Click
-    </button>
-    <script type="module" src="/src/main.js" ></script>
+   -->  <script type="module" src="/src/main.js" ></script>
   </body>
 </html>

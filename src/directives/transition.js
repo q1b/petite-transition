@@ -44,6 +44,7 @@ function isXOrY(value){
 }
 
 function cvt(str,el)  {
+	console.log(str)
     const propsArray = str.trim().split(' ')
     const tempObj = {}
     tempObj['transform'] = []
